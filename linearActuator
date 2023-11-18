@@ -1,0 +1,28 @@
+// Caleb Williams (02/07/2020)
+// Actuates the Actuonix PQ12-100-6-R linear actuator
+// A 2ms pulse is used to retract the arm while a 1ms pulse extends the arm
+// The actuator takes ~2s to extend/retract when there is no load.  When loaded,
+// the travel time increases.  Ensure the delay between when the arm extends
+// and retracts is appropriate to avoid damaging the component.
+// This model features a three wire output:
+// Connect black to GND
+// Connect red to VCC (5-6V)
+// Connect white to an Arduino PWM pin (here I use pin 9)
+
+#include <Servo.h>
+
+Servo actuator; // create a servo object named "actuator"
+
+void setup() {
+  actuator.attach(9); // attach the actuator to Arduino pin 9 (PWM)
+  actuator.writeMicroseconds(2000); // give the actuator a 2ms pulse to retract the arm (1000us = 1ms)
+  delay(3000); // delay a few seconds to give the arm time to retract
+}
+
+void loop() {
+  // Extend and retract the actuator arm on a 5 second interval
+  actuator.writeMicroseconds(1000); // 1ms pulse to extend the arm
+  delay(9000); // the actuator takes >2s to extend/retract when loaded - give it plenty of time
+  actuator.writeMicroseconds(2000); // 2ms pulse to retract the arm
+  delay(9000);
+}
