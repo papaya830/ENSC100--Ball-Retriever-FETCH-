@@ -1,0 +1,56 @@
+//good code will be using for the final demo
+
+#include <Servo.h>
+
+const int trigPin = 8;    // Trigger pin of the ultrasonic sensor
+const int echoPin = 7;    // Echo pin of the ultrasonic sensor
+Servo actuator;            // Create a servo object named "actuator"
+
+void setup() {
+  Serial.begin(9600);      // Initialize serial communication at 9600 baud
+  actuator.attach(12);      // Attach the actuator to Arduino pin 12 (PWM)
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Set the initial position of the actuator (fully retracted)
+  retractArm();
+  delay(2000);             // Delay a few seconds to give the arm time to retract
+}
+
+void loop() {
+  long duration, distance;
+
+  // Trigger the ultrasonic sensor to measure distance
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  // Convert the time it took for the sound wave to travel into distance
+  distance = duration * 0.034 / 2;
+
+  if (distance < 10) {     // Adjust the threshold as needed
+    Serial.println("Object detected! Extending the arm.");
+    extendArm();
+    delay(5000);           // 5 seconds delay to allow full extension
+
+    Serial.println("Retracting the arm.");
+    retractArm();
+    delay(5000);           // 5 seconds delay to allow full retraction
+  } else {
+    Serial.println("No object detected. Waiting...");
+    delay(1000);           // Adjust the delay as needed
+  }
+}
+
+void extendArm() {
+  actuator.writeMicroseconds(2000);  // 2ms pulse to extend the arm
+}
+
+void retractArm() {
+  actuator.writeMicroseconds(1000);  // 1ms pulse to retract the arm
+}
