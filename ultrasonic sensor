@@ -1,5 +1,5 @@
 //good code will be using for the final demo
-
+//draft
 #include <Servo.h>
 
 const int trigPin = 8;    // Trigger pin of the ultrasonic sensor
