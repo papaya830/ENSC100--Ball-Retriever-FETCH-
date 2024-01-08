@@ -30,4 +30,3 @@ void loop() {
   }
 }
 
-//issue with current code is that i don't think the print messages are accurate to decription
